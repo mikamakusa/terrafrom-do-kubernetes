@@ -1,45 +1,41 @@
-## digitalocean_kubernetes_cluster
-output "digitalocean_kubernetes_cluster_id" {
-  value = try(digitalocean_kubernetes_cluster.this.*.id)
+output "cluster" {
+  description = "Informations relatives au cluster kubernetes."
+  value = {
+    for a in digitalocean_kubernetes_cluster.this : a => {
+      id                   = a.id
+      name                 = a.name
+      region               = a.region
+      endpoint             = a.endpoint
+      version              = a.version
+      status               = a.status
+      service_subnet       = a.service_subnet
+      cluster_subnet       = a.cluster_subnet
+      urn                  = a.urn
+      vpc_uuid             = a.vpc_uuid
+      ipv4_address         = a.ipv4_address
+      auto_upgrade         = a.auto_upgrade
+      registry_integration = a.registry_integration
+      surge_upgrade        = a.surge_upgrade
+    }
+  }
 }
 
-output "digitalocean_kubernetes_cluster_name" {
-  value = try(digitalocean_kubernetes_cluster.this.*.name)
-}
-
-output "digitalocean_kubernetes_cluster_maintenance_policy" {
-  value = try(digitalocean_kubernetes_cluster.this.*.maintenance_policy)
-}
-
-output "digitalocean_kubernetes_cluster_tags" {
-  value = try(digitalocean_kubernetes_cluster.this.*.tags)
-}
-
-output "digitalocean_kubernetes_cluster_subnet" {
-  value = try(digitalocean_kubernetes_cluster.this.*.cluster_subnet)
-}
-
-output "digitalocean_kubernetes_cluster_service_subnet" {
-  value = try(digitalocean_kubernetes_cluster.this.*.service_subnet)
-}
-
-## digitalocean_kubernetes_node_pool
-output "digitalocean_kubernetes_node_pool_id" {
-  value = try(digitalocean_kubernetes_node_pool.this.*.id)
-}
-
-output "digitalocean_kubernetes_node_pool_name" {
-  value = try(digitalocean_kubernetes_node_pool.this.*.name)
-}
-
-output "digitalocean_kubernetes_node_pool_taint" {
-  value = try(digitalocean_kubernetes_node_pool.this.*.taint)
-}
-
-output "digitalocean_kubernetes_node_pool_tags" {
-  value = try(digitalocean_kubernetes_node_pool.this.*.tags)
-}
-
-output "digitalocean_kubernetes_node_pool_labels" {
-  value = try(digitalocean_kubernetes_node_pool.this.*.labels)
+output "node_pool" {
+  description = "Informations relatives au(x) node_pool(s)."
+  value = {
+    for b in digitalocean_kubernetes_node_pool.this : b => {
+      id                = b.id
+      name              = b.name
+      taint             = b.taint
+      tags              = b.tags
+      labels            = b.labels
+      cluster_id        = b.cluster_id
+      size              = b.size
+      actual_node_count = b.actual_node_count
+      auto_scale        = b.auto_scale
+      node_count        = b.node_count
+      min_nodes         = b.min_nodes
+      max_nodes         = b.max_nodes
+    }
+  }
 }

@@ -3,16 +3,16 @@ variable "kubernetes_version_prefix" {
   type = string
 }
 
-variable "kubernetes_cluster_name" {
-  type    = string
-  default = null
-}
-
 ## MAPS
 
 variable "labels" {
   type    = map(string)
   default = {}
+}
+
+variable "tags" {
+  type    = list(string)
+  default = []
 }
 
 ## RESOURCES
@@ -52,30 +52,14 @@ variable "cluster" {
       auto_scale = optional(bool)
       tags       = optional(list(string))
       labels     = optional(map(string))
+      taint = optional(list(object({
+        effect = string
+        key    = string
+        value  = string
+      })), [])
     })), [])
     routing_agent = optional(list(object({
       enabled = bool
-    })), [])
-  }))
-  default = []
-}
-
-variable "node_pool" {
-  type = list(object({
-    id         = any
-    cluster_id = any
-    name       = string
-    size       = string
-    node_count = optional(number)
-    min_nodes  = optional(number)
-    max_nodes  = optional(number)
-    auto_scale = optional(bool)
-    tags       = optional(list(string))
-    labels     = optional(map(string))
-    taint = optional(list(object({
-      effect = string
-      key    = string
-      value  = string
     })), [])
   }))
   default = []
